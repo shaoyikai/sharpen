@@ -26,7 +26,7 @@ print_r(shuf($arr));die;
 
 执行结果：
 
-<code>
+```
 Array
 (
     [0] => 2
@@ -39,4 +39,4 @@ Array
     [7] => 1
     [8] => 8
 )
-</code>
+```
