@@ -43,7 +43,6 @@
 	r - 4
 	w - 2
 	x - 1 (如果是file代表是否可以执行，如果是directory代表是否可以进入此目录)
-	----------------------
 	7: rwx
 	6: rw-
 	5: r-x
@@ -71,6 +70,37 @@
 
 
 usr = "unix software resource"
+
+### 文件管理
+
+- `cd`: 切换目录
+- `pwd`: 显示当前目录，`pwd -P`: 显示真实目录
+- `mkdir`：创建新目录，
+- `mkdir -P test1/test2/test3/test4`：递归创建，
+- `mkdir -m 711 test`：创建同时设置权限
+- `rmdir`：删除一个空的目录
+- `rmdir -p test1/test2/test3/test4`：连同“上层”“空的”目录一并删除
+- `rm -r test` 删除test下所有的内容
+
+- `ls` 列出目录内容
+- `cp` 复制
+- `mv` 移动
+- `rm` 删除
+
+- `cat` 从第一行开始显示内容
+- `tac` 从最后一行开始显示
+- `nl` 显示的时候，顺道输出行号
+- `more` 一页一页显示内容
+- `lese` 类似more，但是可以往前翻页
+- `head` 只看头几行
+- `tail` 只看尾巴几行
+- `od` 以二级制方式读取文件内容，`echo abc|od -t oCc` 获取abc对应的ascii码
+- `head -n 20 /etc/man_db.conf | tail -n 10` 显示第11到第20行内容 
+- `touch [-acmt] filename` touch 命令可以修改文件ctime|mtime|atime，或创建空文件
+
+
+### 修改环境变量
+`PATH="${PATH}:/root"` 将/root添加到PATH变量
 
 ### 软件管理
 
