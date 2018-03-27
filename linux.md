@@ -18,6 +18,13 @@
 	`systemctl reboot`
 	`systemctl poweroff`
 
+修改环境变量
+>
+	PATH="${PATH}:/root" 将/root添加到PATH变量
+
+新增别名
+>
+	alias vi='vim'
 
 ### 权限
 
@@ -181,12 +188,103 @@ whereis 仅搜索/bin /sbin 以及 /usr/share/man 下面的page文件，跟几�
 - `ln from_file dest_file` 创建文件“硬链接”
 - `ln -s from_file dest_file` 创建文件“符号链接”，相当于“捷径”。修改链接文件，相当于修改源文件。
 
+### 磁盘管理
 
-### 修改环境变量
-`PATH="${PATH}:/root"` 将/root添加到PATH变量
+- lsblk 列出系统上所有的磁盘列表
+- blkid 列出设备的 UUID 等参数
+- parted 列出磁盘的分区表类型与分区信息
 
-### 软件管理
+磁盘分区： gdisk/fdisk
+> MBR 分区表请使用 fdisk 分区， GPT 分区表请使用 gdisk 分区！
 
-### 网络
+磁盘格式化，格式化其实就是“创建文件系统（make filesystem）”，所以使用的指令是mkfs，我们要创建xfs文件系统，因此用mkfs.xfs指令。
+- `mkfs.xfs [option] /dev/sda1`
+- `mkfs [tab][tab]` 可查看所有可用指令
+
+文件系统检验
+- xfs_repair 处理 XFS 文件系统，`xfs_repair /dev/vda4`
+- fsck.ext4 处理 EXT4 文件系统
+
+> 
+	因为修复文件系统是个很庞大的任务！因此，修复时该文件系统不能被挂载！
+	注意：通常只有身为 root 且你的文件系统有问题的时候才使用这个指令，否则在正常状况下使用此一指令， 可能会造成对系统的危害！通常使用这个指令的场合都是在系统出现极大的问题，导致你在 Linux 开机的时候得进入单人单机模式下进行维护的行为时，才必须使用此一指令！
+
+文件系统的挂载与卸载
+
+- mount -a 将所有未挂载的磁盘都挂载上来
+
+>
+	/etc/filesystems：系统指定的测试挂载文件系统类型的优先顺序；
+	/proc/filesystems：Linux系统已经载入的文件系统类型。
+
+举例
+>
+	[root@study ~]# blkid /dev/vda4/dev/vda4: UUID="e0a6af55-26e7-4cb7-a515-826a8bd29e90" TYPE="xfs"
+	[root@study ~]# mount UUID="e0a6af55-26e7-4cb7-a515-826a8bd29e90" /data/xfs
+	mount: mount point /data/xfs does not exist # 非正规目录！所以手动创建它！
+	[root@study ~]# mkdir -p /data/xfs
+	[root@study ~]# mount UUID="e0a6af55-26e7-4cb7-a515-826a8bd29e90" /data/xfs
+	[root@study ~]# df /data/xfs
+	Filesystem 1K-blocks Used Available Use% Mounted on
+	/dev/vda4 1038336 32864 1005472 4% /data/xfs
+
+顺利挂载，且容量约为 1G 左右没问题！
+
+举例：使用相同的方式，将 /dev/vda5 挂载于 /data/ext4
+>	
+	[root@study ~]# blkid /dev/vda5
+	/dev/vda5: UUID="899b755b-1da4-4d1d-9b1c-f762adb798e1" TYPE="ext4"
+	[root@study ~]# mkdir /data/ext4
+	[root@study ~]# mount UUID="899b755b-1da4-4d1d-9b1c-f762adb798e1" /data/ext4
+	[root@study ~]# df /data/ext4
+	Filesystem 1K-blocks Used Available Use% Mounted on
+	/dev/vda5 999320 2564 927944 1% /data/ext4
+
+umount （将设备文件卸载）
+
+- `umount [-fn] 设备文件名或挂载点`
+
+>
+	[f] 强制卸载！可用在类似网络文件系统 （NFS） 无法读取到的情况下；
+	[l] 立刻卸载文件系统，比 -f 还强！
+	[n] 不更新 /etc/mtab 情况下卸载。
+
+> 卸载之后，可以使用 df 或 mount 看看是否还存在目录树中
+
+### 压缩与解压缩
+
+这个 tar 可以将很多文件“打包”成为一个文件！甚至是目录也可以这么玩。不过，单纯的 tar 功能仅是“打包”而已，亦即是
+将很多文件集结成为一个文件， 事实上，他并没有提供压缩的功能，后来，GNU 计划中，将整个 tar 与压缩的功能结合在一起，如
+此一来提供使用者更方便并且更强大的压缩与打包功能！
+
+gzip, zcat/zmore/zless/zgrep
+>
+	gzip 可以说是应用度最广的压缩指令了！目前 gzip 可以解开 compress, zip 与 gzip 等软件所压缩的文件。 至于 gzip 所创建的压缩文件为 *.gz 的文件名喔！
+
+- `gzip -c a.php > a.php.gz` 将a.php压缩为a.php.gz
+- `gunzip -c a.php.gz > a2.php` 将a.php.gz解压缩为a2.php
+
+bzip2, bzcat/bzmore/bzless/bzgrep
+>
+	若说 gzip 是为了取代 compress 并提供更好的压缩比而成立的，那么 bzip2 则是为了取代 gzip 并提供更佳的压缩比而来的。 bzip2 真是很不错用的东西～这玩意的压缩比竟然比 gzip 还要好～至于 bzip2 的用法几乎与 gzip 相同
+
+xz, xzcat/xzmore/xzless/xzgrep
+> 
+	虽然 bzip2 已经具有很棒的压缩比，不过显然某些自由软件开发者还不满足，因此后来还推出了 xz 这个压缩比更高的软件！这个软件的用法也跟 gzip/bzip2 几乎一模一样！
+	如果你并不觉得时间是你的成本考虑，那么使用 xz 会比较好！如果时间是你的重要成本，那么 gzip 恐怕是比较适合的压缩软件喔！
+
+打包指令：tar
+- 压缩：tar -jcv -f filename.tar.bz2 要被压缩的文件或目录名称
+- 查询：tar -jtv -f filename.tar.bz2
+- 解压缩：tar -jxv -f filename.tar.bz2 -C 欲解压缩的目录
 
 
+xfs文件系统备份 xfsdump
+
+xfs文件系统还原 xfsrestore
+
+使用dd进行备份
+- `dd if="input_file" of="output_file" bs="block_size" count="number"`
+- `dd if=/etc/passwd of=/tmp/passwd.back` 将 /etc/passwd 备份到 /tmp/passwd.back 当中
+
+cpio 可以备份任何东西，包括设备设备文件。
