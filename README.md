@@ -28,7 +28,7 @@
 ### Linux
 
 1. [基础](/linux.md)
-2. [shell](/shell.md)
+2. [bash](/bash.md)
 3. [awk](/awk.md)
 4. [sed](/sed.md)
 5. [grep](/grep.md)

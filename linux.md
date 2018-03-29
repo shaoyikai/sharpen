@@ -26,6 +26,19 @@
 >
 	alias vi='vim'
 
+文件编码转换
+>
+	iconv -f 原本编码 -t 新编码 filename [-o newfile]
+	iconv -f big5 -t utf8 vi.big5 -o vi.utf8	
+
+命令行下快捷键
+>
+	ctrl + u 从光标向前删除指令
+	ctrl + k 从光标向后删除指令
+	ctrl + a 将光标移动到指令的最前面
+	ctrl + e 将光标移动到指令的最后面
+
+
 ### 权限
 
 改变群组
