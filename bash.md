@@ -533,3 +533,96 @@ wc [-lwm]
 >
 	cat /etc/man_db.conf | wc
 	#> 131 723 5171 <===行、字数、字符数
+
+### 双向重导向： tee
+
+tee 可以让 standard output 转存一份到文件内并将同样的数据继续送到屏幕去处理！
+
+ls -l /home | tee ~/homefile | more
+
+这个范例则是将 ls 的数据存一份到 ~/homefile ，同时屏幕也有输出讯息！
+
+### 字符转换命令： tr, col, join, paste, expand
+
+tr 可以用来删除一段讯息当中的文字，或者是进行文字讯息的替换！
+>
+	last | tr '[a-z]' '[A-Z]'  将 last 输出的讯息中，所有的小写变成大写字符：
+	cat /etc/passwd | tr -d ':' 将 /etc/passwd 输出的讯息中，将冒号 （:） 删除
+
+col [-xb]
+选项与参数：
+>
+	-x ：将 tab 键转换成对等的空白键
+	-A ：将 tab 键转换成对等的^I
+
+利用 cat -A 显示出所有特殊按键，最后以 col 将 [tab] 转成空白
+>
+	cat -A /etc/man_db.conf <==此时会看到很多 ^I 的符号，那就是 tab
+	cat /etc/man_db.conf | col -x | cat -A | more
+
+虽然 col 有他特殊的用途，不过，很多时候，他可以用来简单的处理将 [tab] 按键取代成为空白键！ 例如上面的例子当中，如果使用 cat -A 则 [tab] 会以 ^I 来表示。 但经过 col -x 的处理，则会将 [tab] 取代成为对等的空白键！
+
+join主要是在处理“两个文件当中，有 "相同数据" 的那一行，才将他加在一起”的意思。
+
+join [-ti12] file1 file2
+
+选项与参数：
+>
+	-t ：join 默认以空白字符分隔数据，并且比对“第一个字段”的数据，如果两个文件相同，则将两笔数据联成一行，且第一个字段放在第一个！
+	-i ：忽略大小写的差异；
+	-1 ：这个是数字的 1 ，代表“第一个文件要用那个字段来分析”的意思；
+	-2 ：代表“第二个文件要用那个字段来分析”的意思。
+
+此外，需要特别注意的是，在使用 join 之前，你所需要处理的文件应该要事先经过排序 （sort） 处理！ 否则有些比对的项目会被略过呢！特别注意了！
+
+这个 paste 就要比 join 简单多了！相对于 join 必须要比对两个文件的数据相关性， paste 就直接“将两行贴在一起，且中间以 [tab] 键隔开”而已！
+
+paste [-d] file1 file2
+
+选项与参数：
+>
+	-d ：后面可以接分隔字符。默认是以 [tab] 来分隔的！
+	- ：如果 file 部分写成 - ，表示来自 standard input 的数据的意思。
+
+expand 这玩意儿就是在将 [tab] 按键转成空白键啦～
+>
+	grep '^MANPATH' /etc/man_db.conf | head -n 3 | expand -t 6 - | cat -A
+
+expand 也是挺好玩的～他会自动将 [tab] 转成空白键～所以，以上面的例子来说， 使用 cat -A 就会查不到 ^I 的字符啰～此外，因为 [tab] 最大的功能就是格式排列整齐！我们转成空白键后，这个空白键也会依据我们自己的定义来增加大小～ 所以，并不是一个 ^I 就会换成 8 个空白喔！这个地方要特别注意的哩！ 此外，您也可以参考一下unexpand 这个将空白转成 [tab] 的指令功能啊！
+
+### 分区命令： split
+
+如果你有文件太大，导致一些携带式设备无法复制的问题，嘿嘿！找 split 就对了！他可以帮你将一个大文件，依据文件大小或行数来分区，就可以将大文件分区成为小文件了！快速又有效啊！真不错～
+
+split [-bl] file PREFIX
+
+选项与参数：
+>
+	-b ：后面可接欲分区成的文件大小，可加单位，例如 b, k, m 等；
+	-l ：以行数来进行分区。
+	PREFIX ：代表前置字符的意思，可作为分区文件的前导文字。
+
+我的 /etc/services 有六百多K，若想要分成 300K 一个文件时？	
+>
+	cd /tmp; split -b 300k /etc/services services
+	ll -k services*
+
+如何将上面的三个小文件合成一个文件，文件名为 servicesback
+>
+	cat services* >> servicesback
+
+使用 ls -al / 输出的信息中，每十行记录成一个文件
+>
+	ls -al / | split -l 10 - lsroot
+
+### 参数代换： xargs
+
+产生某个指令的参数。xargs 可以读入 stdin 的数据，并且以空白字符或断行字符作为分辨，将stdin的数据分隔成为 arguments 。
+
+### 关于减号 - 的用途
+
+在管线命令当中，常常会使用到前一个指令的 stdout 作为这次的 stdin ，某些指令需要用到文件名称 （例如 tar） 来进行处理时，该 stdin 与 stdout 可以利用减号 "-" 来替代， 举例来说：
+
+tar -cvf - /home | tar -xvf - -C /tmp/homeback
+
+上面这个例子是说：“我将 /home 里面的文件给他打包，但打包的数据不是纪录到文件，而是传送到 stdout； 经过管线后，将 tar -cvf - /home 传送给后面的 tar -xvf - ”。后面的这个 - 则是取用前一个指令的stdout， 因此，我们就不需要使用 filename了！
