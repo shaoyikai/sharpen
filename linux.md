@@ -301,3 +301,72 @@ xfs文件系统还原 xfsrestore
 - `dd if=/etc/passwd of=/tmp/passwd.back` 将 /etc/passwd 备份到 /tmp/passwd.back 当中
 
 cpio 可以备份任何东西，包括设备设备文件。
+
+### 格式化打印： printf
+
+printf '打印格式' 实际内容
+>
+	\a 警告声音输出
+	\b 倒退键（backspace）
+	\f 清除屏幕 （form feed）
+	\n 输出新的一行
+	\r 亦即 Enter 按键
+	\t 水平的 [tab] 按键
+	\v 垂直的 [tab] 按键
+	\xNN NN 为两位数的数字，可以转换数字成为字符。
+
+关于 C 程序语言内，常见的变量格式
+>
+	%ns 那个 n 是数字， s 代表 string ，亦即多少个字符；
+	%ni 那个 n 是数字， i 代表 integer ，亦即多少整数码数；
+	%N.nf 那个 n 与 N 都是数字， f 代表 floating （浮点），如果有小数码数，假设我共要十个位数，但小数点有两位，即为 %10.2f 啰！
+
+将刚刚上头数据的文件 （printf.txt） 内容仅列出姓名与成绩：（用 [tab] 分隔）
+
+`printf '%s\t %s\t %s\t %s\t %s\t \n' $（cat printf.txt）`
+
+### 文件比对工具
+
+除了 diff 比对之外，我们还可以借由 cmp 来比对非纯文本文件！
+
+diff 通常是用在同一的文件（或软件）的新旧版本差异上！
+
+diff [-bBi] from-file to-file
+>
+	-b ：忽略一行当中，仅有多个空白的差异（例如 "about me" 与 "about me" 视为相同
+	-B ：忽略空白行的差异。
+	-i ：忽略大小写的不同。
+
+不过，你不要用 diff 去比对两个完全不相干的文件，因为比不出个啥咚咚！ 另外， diff 也可以比对整个目录下的差异喔！
+
+`diff /etc/rc0.d/ /etc/rc5.d/`
+
+相对于 diff 的广泛用途， cmp 似乎就用的没有这么多了～ cmp 主要也是在比对两个文件，他主要利用“字节”单位去比对， 因此，当然也可以比对 binary file 啰～（还是要再提醒喔， diff 主要是以“行”为单位比对， cmp 则是以“字节”为单位去比对，这并不相同！）
+
+cmp [-l] file1 file2
+
+patch 这个指令与 diff 可是有密不可分的关系啊！我们前面提到，diff 可以用来分辨两个版本之间的差异，举例来说，刚刚我们所创建的 passwd.old 及 passwd.new 之间就是两个不同版本的文件。 那么，如果要“升级”呢？就是“将旧的文件升级为新的文件”时，应该要怎么做呢？其实也不难啦！就是“先比较先旧版本的差异，并将差异档制作成为补丁文件，再由补丁文件更新旧文件”即可。
+
+以 /tmp/testpw 内的 passwd.old 与 passwd.new 制作补丁文件
+
+`diff -Naur passwd.old passwd.new > passwd.patch`
+
+`cat passwd.patch`
+
+将刚刚制作出来的 patch file 用来更新旧版数据
+
+`patch -p0 < passwd.patch`
+
+恢复旧文件的内容
+
+`patch -R -p0 < passwd.patch`
+
+为什么这里会使用 -p0 呢？因为我们在比对新旧版的数据时是在同一个目录下，因此不需要减去目录啦！如果是使用整体目录比对 （diff 旧目录 新目录） 时， 就得要依据创建 patch 文件所在目录来进行目录的删减啰！
+
+
+### 文件打印准备： pr
+
+如果你曾经使用过一些图形接口的文书处理软件的话，那么很容易发现，当我们在打印的时候， 可以同时选择与设置每一页打印时的标头吧！也可以设置页码呢！那么，如果我是在Linux下面打印纯文本文件呢可不可以具有标题啊？可不可以加入页码啊？呵呵！当然可以啊！使用 pr 就能够达到这个功能了。
+
+`pr /etc/man_db.conf`
+
