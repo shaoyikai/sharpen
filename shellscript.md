@@ -70,6 +70,130 @@ time echo "scale=${num};4*a(1)" | bc -lq
 5. 判定字串的数据
 6. 多重条件判定，例如： test -r filename -a -x filename
 
-利用判断符号 [ ]
+练习：
+>
+	1. 这个文件是否存在，若不存在则给予一个“Filename does not exist”的讯息，并中断程序；
+	2. 若这个文件存在，则判断他是个文件或目录，结果输出“Filename is regular file”或 “Filename is directory”
+	3. 判断一下，执行者的身份对这个文件或目录所拥有的权限，并输出权限数据！
 
-530
+```bash
+#!/bin/bash
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+echo -e "Please input a filename, I will check the filename's type and permission.\n\n"
+read -p "Input a filename: " filename
+
+test -z ${filename} && echo "Your MUST input a filename." && exit 0
+test ! -e ${filename} && "The filename '${filename}' DO NOT exist" && exit 0
+
+test -f ${filename} && filetype="regulare file"
+test -d ${filename} && filetype="directory"
+
+test -r ${filename} && perm="readable"
+test -w ${filename} && perm="${perm} writable"
+test -x ${filename} && perm="${perm} executable"
+
+echo "The filename: ${filename} is a ${filetype}"
+echo "And the permission for you are: ${perm}"
+
+```
+### 利用判断符号 [ ]
+
+除了我们很喜欢使用的 test 之外，其实，我们还可以利用判断符号“ [ ] ”（就是中括号啦） 来进行数据的判断呢！
+
+想要知道 ${HOME} 这个变量是否为空：
+
+`[ -z "${HOME}" ] ; echo $?`
+
+> 使用中括号必须要特别注意，因为中括号用在很多地方，包括万用字符与正则表达式等等，所以如果要在 bash 的语法当中使用中括号作为 shell 的判断式时，必须要注意中括号的两端需要有空白字符来分隔喔！
+
+- 在中括号 [] 内的每个元件都需要有空白键来分隔；
+- 在中括号内的变量，最好都以双引号括号起来；
+- 在中括号内的常数，最好都以单或双引号括号起来。
+
+```bash
+#!/bin/bash
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+read -p "Please input （Y/N）: " yn
+[ "${yn}" == "Y" -o "${yn}" == "y" ] && echo "OK, continue" && exit 0
+[ "${yn}" == "N" -o "${yn}" == "n" ] && echo "Oh, interrupt!" && exit 0
+
+echo "I don't know what your choice is" && exit 0
+```
+
+### Shell script 的默认变量（$0, $1...）
+
+本章一开始是使用 read 的功能！但 read 功能的问题是你得要手动由键盘输入一些判断式。如果通过指令后面接参数， 那么一个指令就能够处理完毕而不需要手动再次输入一些变量行为！这样下达指令会比较简单方便啦！
+
+- $# ：代表后接的参数“个数”，以上表为例这里显示为“ 4 ”；
+- $@ ：代表“ "$1" "$2" "$3" "$4" ”之意，每个变量是独立的（用双引号括起来）；
+- $* ：代表“ "$1c$2c$3c$4" ”，其中 c 为分隔字符，默认为空白键， 所以本例中代表“ "$1 $2 $3 $4" ”之意。
+
+```bash
+#!/bin/bash
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+echo "The script name is        ==> ${0}"
+echo "Total parameter number is ==> $#"
+echo "Your whole parameter is   ==> $@"
+echo "The 1st parameter         ==> ${1}"
+echo "The 2nd parameter         ==> ${2}"
+
+```
+
+### shift：造成参数变量号码偏移
+
+shift 会移动变量，而且 shift 后面可以接数字，代表拿掉最前面的几个参数的意思。
+
+### 条件判断式
+
+方式一：
+>
+	if [ 条件判断式 ];then
+		指令工作;
+	fi
+
+```bash
+#!/bin/bash
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+read -p "Please input （Y/N）: " yn
+
+if [ "${yn}" == "Y" ] || [ "${yn}" == "y" ]; then
+	echo "OK, continue"
+	exit 0
+fi
+if [ "${yn}" == "N" ] || [ "${yn}" == "n" ]; then
+	echo "Oh, interrupt!"
+	exit 0
+fi
+echo "I don't know what your choice is" && exit 0
+```
+
+方式二：
+>
+	if [ 条件判断式 ]; then
+		当条件判断式成立时，可以进行的指令工作内容；
+	else
+		当条件判断式不成立时，可以进行的指令工作内容；
+	fi
+
+方式三：
+>
+	if [ 条件判断式一 ]; then
+		当条件判断式一成立时，可以进行的指令工作内容；
+	elif [ 条件判断式二 ]; then
+		当条件判断式二成立时，可以进行的指令工作内容；
+	else
+		当条件判断式一与二均不成立时，可以进行的指令工作内容；
+	fi	
+
