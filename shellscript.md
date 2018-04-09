@@ -197,3 +197,147 @@ echo "I don't know what your choice is" && exit 0
 		当条件判断式一与二均不成立时，可以进行的指令工作内容；
 	fi	
 
+```bash
+
+
+检测服务器上安装的服务脚本
+#!/bin/bash
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+echo "Now, I will detect your Linux server's services!"
+
+testfile=/dev/shm/netstat_checking.txt
+netstat -tuln > ${testfile}
+testing=$(grep ":80 " ${testfile})
+if [ "${testing}" == "" ];then
+        echo -e "\033[31m[error]\033[0m: WWW"
+else
+        echo -e "\033[32m[ok]\033[0m: www"
+fi
+testing=$(grep ":22 " ${testfile})
+if [ "${testing}" == "" ];then
+        echo -e "\033[31m[error]\033[0m: SSH"
+else
+        echo -e "\033[32m[ok]\033[0m: ssh"
+fi
+testing=$(grep ":3306 " ${testfile})
+if [ "${testing}" == "" ];then
+        echo -e "\033[31m[error]\033[0m: Mysql"
+else
+        echo -e "\033[32m[ok]\033[0m: mysql"
+fi
+testing=$(grep ":9000 " ${testfile})
+if [ "${testing}" == "" ];then
+        echo -e "\033[31m[error]\033[0m: PHP-FPM"
+else
+        echo -e "\033[32m[ok]\033[0m: php-fpm"
+fi
+```
+
+### 利用 case ..... esac 判断
+
+每一个变量内容的程序段最后都需要两个分号 （;;） 来代表该程序段落的结束，这挺重要的喔！ 至于为何需要有 * 这个变量内容在最后呢？这是因为，如果使用者不是输入变量内容一或二时， 我们可以告知使用者相关的信息啊！
+
+```bash
+#!/bin/bash
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+case ${1} in 
+        "hello")
+                echo "Hello,how are you?"
+                ;;
+        "")
+                echo "You MUST input parameters, ex > {${0} someword}"
+                ;;
+        *)
+                echo "Usage ${0} {hello}"
+                ;;
+esac
+```
+
+
+### 利用 function 功能
+
+因为 shell script 的执行方式是由上而下，由左而右， 因此在 shell script 当中的function的设置一定要在程序的最前面，这样才能够在执行时被找到可用的程序段喔
+
+### 循环 （loop）
+
+当 condition 条件成立时，就进行循环，直到 condition 的条件不成立才停止
+>
+	while [ condition ] 
+	do 
+		程序段落
+	done 
+
+当 condition 条件成立时，就终止循环， 否则就持续进行循环的程序段。
+>
+	until [ condition ]
+	do
+		程序段落
+	done
+
+```bash
+#!/bin/bash
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+s=0 
+i=0 
+while [ "${i}" != "100" ]
+do
+i=$(($i+1))
+s=$(($s+$i)) 
+done
+echo "The result of '1+2+3+...+100' is ==> $s"
+```
+
+### for...do...done （固定循环）
+>
+	for var in con1 con2 con3 ...
+	do
+		程序段
+	done
+
+显示出 192.168.1.1~192.168.1.20 共 20 部主机目前是否能与你的机器连通！
+```bash
+#!/bin/bash
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+network="192.168.1"
+
+for sitenu in $(seq 1 20)
+do
+        ping -c 1 -w 1 ${network}.${sitenu} &> /dev/null && result=0 || result=1
+        if [ "${result}" == 0 ]; then
+                echo "Server ${network}.${sitenu} is UP."
+        else
+                echo "Server ${network}.${sitenu} is DOWN."
+        fi
+done
+
+```
+
+### for...do...done 的数值处理
+
+>
+	for （（ 初始值; 限制值; 执行步阶 ））
+	do
+		程序段
+	done
+
+### shell ssccrriipptt 的追踪与 debug
+
+sh [-nvx] scripts.sh
+
+选项与参数：
+-n ：不要执行 script，仅查询语法的问题；
+-v ：再执行 sccript 前，先将 scripts 的内容输出到屏幕上；
+-x ：将使用到的 script 内容显示到屏幕上，这是很有用的参数！
+
+564
