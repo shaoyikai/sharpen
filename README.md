@@ -32,3 +32,7 @@
 3. [awk](/awk.md)
 4. [sed](/sed.md)
 5. [grep](/grep.md)
+
+### C 语言
+
+1. [centos下c语言编程](c.md)
