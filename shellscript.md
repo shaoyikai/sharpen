@@ -357,3 +357,49 @@ sh [-nvx] scripts.sh
 由于在 /etc/shadow 内仅会有密码参数而不会有加密过的密码数据，因此我们在创建使用者帐号时， 还需要使用“ passwd 帐号 ”来给予密码才算是完成了使用者创建的流程。
 
 
+### passwd
+
+刚刚我们讲到了，使用 useradd 创建了帐号之后，在默认的情况下，该帐号是暂时被封锁的，那该如何是好？直接给他设置新密码就好了嘛！设置密码就使用 passwd 
+
+使用 standard input 创建用户的密码
+
+`echo "abc543CC" | passwd --stdin vbird2`
+
+这个动作会直接更新使用者的密码而不用再次的手动输入！好处是方便处理，缺点是这个密码会保留在指令中， 未来若系统被攻破，人家可以在 /root/.bash_history 找到这个密码呢！所以这个动作通常仅用在 shell script 的大量创建使用者帐号当中！
+
+创建一个名为 agetest 的帐号，该帐号第一次登陆后使用默认密码，但必须要更改过密码后，使用新密码才能够登陆系统使用 bash 环境
+>
+	useradd agetest
+	echo "agetest" | passwd --stdin agetest
+	chage -d 0 agetest
+	chage -l agetest | head -n 3
+
+你会发现 agetest 这个帐号在第一次登陆时可以使用与帐号同名的密码登陆， 但登陆时就会被要求立刻更改密码，更改密码完成后就会被踢出系统。
+
+### 使用者身份切换
+
+- `su -` 可以将身份切换为root用户，但是这个指令需要root密码。
+- `sudo` sudo 需要输入使用者自己的密码
+
+假设想要使用 non-login shell 的方式变成 root
+
+`su`
+
+使用 login shell 的方式切换为 root 的身份并观察变量
+
+`su -`
+
+### 定时任务
+
+`crontab [-u username] [-l|-e|-r]`
+>
+	-u ：只有 root 才能进行这个任务，亦即帮其他使用者创建/移除 crontab 工作调度；
+	-e ：编辑 crontab 的工作内容
+	-l ：查阅 crontab 的工作内容
+	-r ：移除所有的 crontab 的工作内容，若仅要移除一项，请用 -e 去编辑。
+
+默认情况下，任何使用者只要不被列入 /etc/cron.deny 当中，那么他就可以直接下达“ crontab -e ”去编辑自己的例行性命令了！
+
+>
+	分钟	小时	日期	月份	周	指令
+	0-59	0-23	1-31	1-12	0-7 /tmp/test.sh
