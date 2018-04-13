@@ -36,3 +36,7 @@
 ### C 语言
 
 1. [centos下c语言编程](c.md)
+
+### 消息队列
+
+1. [RabbitMQ](rabbitmq.md)
