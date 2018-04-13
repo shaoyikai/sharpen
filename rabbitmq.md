@@ -125,6 +125,8 @@ $connection->close();
 
 一个 producer 多个 consumers （轮询处理）
 
+This concept is especially useful in web applications where it's impossible to handle a complex task during a short HTTP request window.
+
 producer
 
 ```php
