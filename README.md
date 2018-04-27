@@ -43,7 +43,14 @@
 ### 消息队列
 
 1. [RabbitMQ](rabbitmq.md)
+2. [Redis](redis.md)
 
 ### 数据库
 
 1. [PHP操作sqlite示例](sqlite.md)
+2. [mysql](mysql.md)
+
+### 计算机网络
+
+1. [计算机网络](network.md)
+2. [PHP Socket编程](php-socket.md)

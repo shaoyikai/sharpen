@@ -166,3 +166,20 @@ A可以向B发送数据，B也可以向A发送数据，实现双工通信 \\
 ### 两种数据交换技术的现状
 
 在上面，“分组交换交通局”和“电路交换交通局”的那一番争论到底谁最终赢了呢？ 总体来说，大部分的人民群众都站在了分组交换这一边。现如今，我们的因特网和计算机网络都是采用分组交换的，而只有传统的电话网络采用的才是电路交换。
+
+
+### socket
+
+A socket is the interface between the application process and the transport-layer protocol.
+
+Many networks, including the Internet, provide more than one transport-layer
+protocol. When you develop an application, you must choose one of the available
+transport-layer protocols. How do you make this choice? Most likely, you would
+study the services provided by the available transport-layer protocols, and then pick
+the protocol with the services that best match your application’s needs. The situation
+is similar to choosing either train or airplane transport for travel between two
+cities. You have to choose one or the other, and each transportation mode offers different
+services. (For example, the train offers downtown pickup and drop-off,
+whereas the plane offers shorter travel time.)
+
+ transport protocol 的四个维度： reliable data transfer, throughput, timing, and security. 
