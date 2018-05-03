@@ -9,7 +9,7 @@ $port = 25003;
 // don't timeout!
 set_time_limit(0);
 // create socket
-$socket = socket_create(AF_INET, SOCK_STREAM, 0) or die("Could not create socket\n");
+$socket = socket_create(AF_INET, SOCK_STREAM, 0) or die("Could not create socket\n"); 
 // bind socket to port
 $result = socket_bind($socket, $host, $port) or die("Could not bind to socket\n");
 // start listening for connections
@@ -58,7 +58,7 @@ socket_close($socket);
 `$sock = socket_create(AF_INET, SOCK_STREAM, 0);`
 
 Address Family : AF_INET (this is IP version 4)
-Type : SOCK_STREAM (this means connection oriented TCP protocol)
+Type : SOCK_STREAM (this means connection oriented TCP protocol) or SOCK_DGRAM (this means connection oriented UDP protocol)
 Protocol : 0 [ or IPPROTO_IP This is IP protocol]
 
 [参考1](https://www.codeproject.com/Tips/418814/Socket-Programming-in-PHP)
