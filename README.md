@@ -32,12 +32,13 @@
 3. [awk](/awk.md)
 4. [sed](/sed.md)
 5. [grep](/grep.md)
+6. [xming + putty 远程打开gui程序](/xming_putty.md)
+7. [docker](/docker.md)
 
 ### C / C++ 
 
 1. [centos下c语言编程](c.md)
 2. [centos下qt开发](centos-qt.md)
-3. [centos下gtk开发](centos-gtk.md)
 
 
 ### 消息队列
