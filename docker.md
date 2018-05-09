@@ -131,8 +131,8 @@ c.基于 Dockerfile 创建
 ### 访问Docker仓库
 
 
-
-
+### PHP环境
+docker run -p 172.23.158.57:8080:80 nginx
 
 
 

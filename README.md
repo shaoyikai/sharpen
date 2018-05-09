@@ -55,3 +55,8 @@
 
 1. [计算机网络](network.md)
 2. [PHP Socket编程](php-socket.md)
+
+### 编程思想
+
+1. [面向对象](oop.md)
+1. [设计模式](design-mode.md)
