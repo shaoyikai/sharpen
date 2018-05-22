@@ -1,5 +1,4 @@
-## plantuml画UML类图
-
+> 主要来源： [UML图中类之间的关系:依赖,泛化,关联,聚合,组合,实现](http://www.cnblogs.com/LUO77/p/5785374.html)
 
 ### 依赖关系（Dependence）
 
@@ -120,4 +119,4 @@ Endif
 
 生成的png
 
-![Alt text](/images/2018/plantuml.PNG "plantuml")
+![Alt text](/images/2018/plantuml.png "plantuml")
