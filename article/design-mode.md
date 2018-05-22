@@ -281,3 +281,150 @@ public class ConcreteClass2 extends AbstractClass {
 - builder 抽象建造者
 - concreteBuilder 具体建造者
 - director 导演类
+
+PHP示例
+```php
+<?php
+/**
+ * 建造者模式
+ */
+//Product：产品角色
+class Product
+{
+    public function Add($part){
+        $this->parts[]=$part;
+    }
+    public function show(){
+        var_dump('产品创建');
+        foreach ($this->parts as $part){
+            var_dump($part);
+        }
+    }
+}
+
+//Builder：抽象建造者
+interface Builder
+{
+    public function BuildPartA();
+    public function BuildPartB();
+    public function GetResult();
+}
+
+//ConcreteBuilder：具体建造者
+class ConcreteBuilder1 implements Builder
+{
+    public function __construct(){
+        $this->product=new Product();
+    }
+    public function BuildPartA()
+    {
+        $this->product->Add('部件A');
+    }
+    public function BuildPartB()
+    {
+        $this->product->Add('部件B');
+    }
+    public function GetResult()
+    {
+        return $this->product;
+    }
+}
+class ConcreteBuilder2 implements Builder
+{
+    public function __construct(){
+        $this->product=new Product();
+    }
+    public function BuildPartA()
+    {
+        $this->product->Add('部件X');
+    }
+    public function BuildPartB()
+    {
+        $this->product->Add('部件Y');
+    }
+    public function GetResult()
+    {
+        return $this->product;
+    }
+}
+
+//Director：指挥者
+class Director
+{
+    public function Construct($builder){
+        $builder->BuildPartA();
+        $builder->BuildPartB();
+    }
+}
+
+$a=new Director();
+$b1=new ConcreteBuilder1();
+$b2=new ConcreteBuilder2();
+
+$a->Construct($b1);
+$p1=$b1->GetResult();
+$p1->show();
+
+$a->Construct($b2);
+$p2=$b2->GetResult();
+$p2->show();
+```
+
+运行结果
+
+```ini
+string '产品创建' (length=12)
+string '部件A' (length=7)
+string '部件B' (length=7)
+string '产品创建' (length=12)
+string '部件X' (length=7)
+string '部件Y' (length=7)
+```
+
+7. 代理模式也叫委托模式
+
+PHP示例
+```php
+
+//定义RealSubject和Proxy共同具备的东西
+interface Subject{
+    function say();
+    function run();
+}
+
+class RealSubject implements Subject{
+    private $name;
+
+    function __construct($name){
+        $this->name = $name;
+    }
+
+    function say(){
+        echo $this->name."在吃饭<br>";
+    }
+    function run(){
+        echo $this->name."在跑步<br>";
+    }
+}
+class Proxy implements Subject{
+    private $realSubject = null;
+    function __construct(RealSubject $realSubject){
+        $this->realSubject = $realSubject;
+    }
+    function say(){
+        $this->realSubject->say();
+    }
+    function run(){
+        $this->realSubject->run();
+    }
+}
+
+//测试
+$subject = new RealSubject("张三");
+$proxy = new Proxy($subject);
+$proxy->say();
+$proxy->run();
+```
+我相信第一次接触到代理模式的读者肯定很郁闷，为什么要用代理呀？想想现实世界吧，打官司为什么要找个律师？因为你不想参与中间过程的是是非非，只要完成自己的答辩就成，其他的比如事前调查、事后追查都由律师来搞定，这就是为了减轻你的负担。代理模式的使用场景非常多，大家可以看看SpringAOP，这是一个非常典型的动态代理。
+
+8. 原型模式

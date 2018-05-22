@@ -16,7 +16,7 @@
 
 动态规划算法
 
-[洗牌算法](/shuffle.md)
+[洗牌算法](./article/shuffle.md)
 
 ### 数据结构
 
@@ -27,36 +27,37 @@
 
 ### Linux
 
-1. [基础](/linux.md)
-2. [bash](/bash.md)
-3. [awk](/awk.md)
-4. [sed](/sed.md)
-5. [grep](/grep.md)
-6. [xming + putty 远程打开gui程序](/xming_putty.md)
-7. [docker](/docker.md)
+1. [基础](./article/linux.md)
+2. [bash](./article/bash.md)
+3. [awk](./article/awk.md)
+4. [sed](./article/sed.md)
+5. [grep](./article/grep.md)
+6. [xming + putty 远程打开gui程序](./article/xming_putty.md)
+7. [docker](./article/docker.md)
 
 ### C / C++ 
 
-1. [centos下c语言编程](c.md)
-2. [centos下qt开发](centos-qt.md)
+1. [centos下c语言编程](./article/c.md)
+2. [centos下qt开发](./article/centos-qt.md)
 
 
 ### 消息队列
 
-1. [RabbitMQ](rabbitmq.md)
-2. [Redis](redis.md)
+1. [RabbitMQ](./article/rabbitmq.md)
+2. [Redis](./article/redis.md)
 
 ### 数据库
 
-1. [PHP操作sqlite示例](sqlite.md)
-2. [mysql](mysql.md)
+1. [PHP操作sqlite示例](./article/sqlite.md)
+2. [mysql](./article/mysql.md)
 
 ### 计算机网络
 
-1. [计算机网络](network.md)
-2. [PHP Socket编程](php-socket.md)
+1. [计算机网络](./article/network.md)
+2. [PHP Socket编程](./article/php-socket.md)
 
 ### 编程思想
 
-1. [面向对象](oop.md)
-1. [设计模式](design-mode.md)
+1. [面向对象](./article/oop.md)
+2. [设计模式](./article/design-mode.md)
+3. [UML类图](./article/uml.md)
