@@ -1,4 +1,5 @@
 > 主要来源： [UML图中类之间的关系:依赖,泛化,关联,聚合,组合,实现](http://www.cnblogs.com/LUO77/p/5785374.html)
+> 参考：[详解UML图之类图](详解UML图之类图)
 
 ### 依赖关系（Dependence）
 
@@ -120,3 +121,329 @@ Endif
 生成的png
 
 ![Alt text](/images/2018/plantuml.png "plantuml")
+
+#### 时序图
+
+1. 基本用法
+
+seq.puml 
+
+```puml
+@startuml
+Alice -> Bob: 认证请求
+Bob --> Alice: 认证回应
+Alice -> Bob: 另一个认证请求
+Alice <-- Bob: 另一个认证回应
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq1.png "plantuml")
+
+注意：windows系统seq.puml应设置为gb2312编码来防止中文乱码。
+
+2. 定义参与者
+
+- 可以使用 participant 关键字来定义参与者顺序
+- 可以用其他关键词来定义一个参与者
+
+```puml
+@startuml
+actor Foo1
+boundary Foo2
+control Foo3
+entity Foo4
+database Foo5
+collections Foo6
+
+Foo1 -> Foo2 : To boundary
+Foo1 -> Foo3 : To control
+Foo1 -> Foo4 : To entity
+Foo1 -> Foo5 : To database
+Foo1 -> Foo6 : To collections
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq2.png "plantuml")
+
+- 可以通过 as 关键字来重命名一个参与者
+- 可以改变参与者的背景色
+
+```puml
+@startuml
+actor Bob #red
+' The only difference between actor
+'and participant is the drawing
+participant Alice
+participant "I have a really\nlong name" as L #99FF99
+/' You can also declare:
+participant L as "I have a really\nlong name" #99FF99
+'/
+Alice ->Bob: Authentication Request
+Bob ->Alice: Authentication Response
+Bob ->L: Log transaction
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq3.png "plantuml")
+
+- 可以通过 order 关键字来自定义参与者显示顺序
+
+```puml
+@startuml
+participant Last order 30
+participant Middle order 20
+participant First order 10
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq4.png "plantuml")
+
+- 使用非字母参与者
+
+```puml
+@startuml
+Alice -> "Bob()" : Hello
+"Bob()" -> "This is very\nlong" as Long
+' You can also declare:
+' "Bob()" -> Long as "This is very\nlong"
+Long --> "Bob()" : ok
+@enduml
+```
+![Alt text](/images/2018/plant-seq5.png "plantuml")
+
+3. 参与者可以给自己发消息
+
+```puml
+@startuml
+Alice ->Alice: This is a signal to self.\nIt also demonstrates\nmultiline \ntext
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq6.png "plantuml")
+
+4. 改变箭头样式
+
+- add a final x to denote a lost message
+- use \ or / instead of < or > to have only the bottom or top part of the arrow
+- repeat the arrow head (for example, >> or //) head to have a thin drawing
+- use -- instead of - to have a dotted arrow
+- add a final ”o” at arrow head
+- use bidirectional arrow
+
+![Alt text](/images/2018/plant-seq7.png "plantuml")
+
+5. 改变箭头颜色
+
+```puml
+@startuml
+Bob -[#red]> Alice : hello
+Alice -[#0000FF]->Bob : ok
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq8.png "plantuml")
+
+6. 自动给消息添加序列号
+
+使用关键字 autonumber 
+
+```puml
+@startuml
+autonumber
+Bob -> Alice : Authentication Request
+Bob <- Alice : Authentication Response
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq9.png "plantuml")
+
+You can specify a startnumber with autonumber 'start' , and also an increment with autonumber
+'start' 'increment'.
+
+```puml
+@startuml
+autonumber
+Bob -> Alice : Authentication Request
+Bob <- Alice : Authentication Response
+autonumber 15
+Bob -> Alice : Another authentication Request
+Bob <- Alice : Another authentication Response
+autonumber 40 10
+Bob -> Alice : Yet another authentication Request
+Bob <- Alice : Yet another authentication Response
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq10.png "plantuml")
+
+7. 图分割
+
+使用 newpage 关键字可以将图片分割成多个
+
+```puml
+@startuml
+Alice -> Bob : message 1
+Alice -> Bob : message 2
+newpage
+Alice -> Bob : message 3
+Alice -> Bob : message 4
+newpage A title for the\nlast page
+Alice -> Bob : message 5
+Alice -> Bob : message 6
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq11.png "plantuml")
+![Alt text](/images/2018/plant-seq11-001.png "plantuml")
+![Alt text](/images/2018/plant-seq11-002.png "plantuml")
+
+8. 消息分组
+
+It is possible to group messages together using the following keywords:
+
+- alt/else
+- opt
+- loop
+- par
+- break
+- critical
+- group, followed by a text to be displayed
+
+```puml
+@startuml
+Alice -> Bob: Authentication Request
+alt successful case
+Bob -> Alice: Authentication Accepted
+else some kind of failure
+Bob -> Alice: Authentication Failure
+group My own label
+Alice -> Log : Log attack start
+loop 1000 times
+Alice -> Bob: DNS Attack
+end
+Alice -> Log : Log attack end
+end
+else Another type of failure
+Bob -> Alice: Please repeat
+end
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq12.png "plantuml")
+
+9. 消息备注
+
+使用 note left 或者 note right 关键字
+
+```puml
+@startuml
+Alice ->Bob : hello
+note left: this is a first note
+Bob ->Alice : ok
+note right: this is another note
+Bob ->Bob : I am thinking
+note left
+a note
+can also be defined
+on several lines
+end note
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq13.png "plantuml")
+
+
+It is possible to highlight a note by changing its background color.
+You can also have a multi-line note using the end note keywords.
+
+```puml
+@startuml
+participant Alice
+participant Bob
+note left of Alice #aqua
+This is displayed
+left of Alice.
+end note
+note right of Alice: This is displayed right of Alice.
+note over Alice: This is displayed over Alice.
+note over Alice , Bob #FFAAAA: This is displayed\n over Bob and Alice.
+note over Bob , Alice
+This is yet another
+example of
+a long note.
+end note
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq14.png "plantuml")
+
+10. 分割线
+
+If you want, you can split a diagram using == separator to divide your diagram into logical steps.
+
+```puml
+@startuml
+== Initialization ==
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+== Repetition ==
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq15.png "plantuml")
+
+11. 介绍
+
+使用 ref over 关键字
+
+```puml
+@startuml
+participant Alice
+actor Bob
+ref over Alice , Bob : init
+Alice -> Bob : hello
+ref over Bob
+This can be on
+several lines
+end ref
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq16.png "plantuml")
+
+12. 延迟
+
+使用符号 `...` 作为关键字
+
+```puml
+@startuml
+Alice -> Bob: Authentication Request
+...
+Bob --> Alice: Authentication Response
+...5 minutes latter...
+Bob --> Alice: Bye !
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq17.png "plantuml")
+
+13. 空白
+
+使用 `|||` 代表空白，可以得到一定的空间。
+
+```puml
+@startuml
+Alice -> Bob: message 1
+Bob --> Alice: ok
+|||
+Alice -> Bob: message 2
+Bob --> Alice: ok
+||45||
+Alice -> Bob: message 3
+Bob --> Alice: ok
+@enduml
+```
+
+![Alt text](/images/2018/plant-seq18.png "plantuml")
