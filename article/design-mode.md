@@ -428,3 +428,129 @@ $proxy->run();
 我相信第一次接触到代理模式的读者肯定很郁闷，为什么要用代理呀？想想现实世界吧，打官司为什么要找个律师？因为你不想参与中间过程的是是非非，只要完成自己的答辩就成，其他的比如事前调查、事后追查都由律师来搞定，这就是为了减轻你的负担。代理模式的使用场景非常多，大家可以看看SpringAOP，这是一个非常典型的动态代理。
 
 8. 原型模式
+
+![Alt text](/images/2018/mode-prototype.png "原型模式")
+
+【原型模式中主要角色】
+抽象原型(Prototype)角色：声明一个克隆自身的接口
+
+具体原型(Concrete Prototype)角色：实现一个克隆自身的操作
+
+```php
+<?php
+/**
+ * 原型模式 2010-06-27 sz
+ * @author phppan.p#gmail.com  http://www.phppan.com
+ * 哥学社成员（http://www.blog-brother.com/）
+ * @package design pattern
+ */
+ 
+/**
+ * 抽象原型角色
+ */
+interface Prototype {
+    public function copy();
+}
+ 
+/**
+ * 具体原型角色
+ */
+class ConcretePrototype implements Prototype{
+ 
+    private  $_name;
+ 
+    public function __construct($name) {
+        $this->_name = $name;
+    }
+ 
+    public function setName($name) {
+        $this->_name = $name;
+    }
+ 
+    public function getName() {
+        return $this->_name;
+    }
+ 
+    public function copy() {
+       /* 深拷贝实现
+        $serialize_obj = serialize($this);  //  序列化
+        $clone_obj = unserialize($serialize_obj);   //  反序列化                                                     
+        return $clone_obj;
+        */
+        return clone $this;     //  浅拷贝
+    }
+}
+ 
+/**
+ * 测试深拷贝用的引用类
+ */
+class Demo {
+    public $array;
+}
+ 
+class Client {
+ 
+     /**
+     * Main program.
+     */
+    public static function main() {
+ 
+        $demo = new Demo();
+        $demo->array = array(1, 2);
+        $object1 = new ConcretePrototype($demo);
+        $object2 = $object1->copy();
+ 
+        var_dump($object1->getName());
+        echo '<br />';
+        var_dump($object2->getName());
+        echo '<br />';
+ 
+        $demo->array = array(3, 4);
+        var_dump($object1->getName());
+        echo '<br />';
+        var_dump($object2->getName());
+        echo '<br />';
+ 
+    }
+ 
+}
+ 
+Client::main();
+?>
+```
+
+浅拷贝
+
+被拷贝对象的所有变量都含有与原对象相同的值，而且对其他对象的引用仍然是指向原来的对象。
+即 浅拷贝只负责当前对象实例，对引用的对象不做拷贝。
+
+深拷贝
+
+被拷贝对象的所有的变量都含有与原来对象相同的值，除了那些引用其他对象的变量。那些引用其他对象的变量将指向一个被拷贝的新对象，而不再是原有那些被引用对象。
+
+深拷贝要深入到多少层，是一个不确定的问题。
+
+利用序列化来做深拷贝,把对象写到流里的过程是序列化（Serilization）过程，但在业界又将串行化这一过程形象的称为“冷冻”或“腌咸菜”过程；
+
+而把对象从流中读出来的过程则叫做反序列化（Deserialization）过程，也称为“解冻”或“回鲜”过程。
+
+在PHP中使用serialize和unserialize函数实现序列化和反序列化
+
+[浅copy与深copy]https://shaoyikai.github.io/2018/05/24/2018-05-24-php-copy/
+
+9. 中介者模式
+10. 命令模式 
+11. 责任链模式
+12. 装饰模式
+13. 策略模式
+14. 适配器模式
+15. 迭代器模式
+16. 组合模式
+17. 观察者模式
+18. 门面模式
+19. 备忘录模式
+20. 访问者模式
+21. 状态模式
+22. 解释器模式
+23. 享元模式
+24. 桥梁模式
