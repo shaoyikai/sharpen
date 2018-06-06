@@ -39,6 +39,7 @@
 
 1. [centos下c语言编程](./article/c.md)
 2. [centos下qt开发](./article/centos-qt.md)
+3. [将qt项目制作成安装包](./article/qtproject-deploy.md)
 
 
 ### 消息队列
