@@ -34,6 +34,7 @@
 5. [grep](./article/grep.md)
 6. [xming + putty 远程打开gui程序](./article/xming_putty.md)
 7. [docker](./article/docker.md)
+8. [与windows互传文件 samba](./article/samba.md)
 
 ### C / C++ 
 
