@@ -52,6 +52,7 @@
 
 1. [PHP操作sqlite示例](./article/sqlite.md)
 2. [mysql](./article/mysql.md)
+3. [mysqlslap 负载仿真客户端](./article/mysqlslap.md)
 
 ### 计算机网络
 
