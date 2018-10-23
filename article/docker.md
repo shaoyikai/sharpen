@@ -134,6 +134,45 @@ c.基于 Dockerfile 创建
 ### PHP环境
 docker run -p 172.23.158.57:8080:80 nginx
 
+### 一键部署 zabbix 环境
 
+执行命令：
+
+docker run --name some-zabbix-appliance -p 80:80 -p 10051:10051 -d zabbix/zabbix-appliance:centos-3.0-latest
+
+或者使用 docker-compose 工具：
+
+```yaml
+# https://hub.docker.com/r/zabbix/zabbix-appliance/
+# docker-compose.yml
+# docker-compose up -d
+
+version: '3.1'
+
+services:
+  zabbixdb:
+    image: monitoringartist/zabbix-db-mariadb:latest
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - MARIADB_USER=zabbix
+      - MARIADB_PASS=my_password
+
+  zabbixserver:
+    image: monitoringartist/dockbix-xxl:latest
+    depends_on:
+      - zabbixdb
+    ports:
+      - "80:80"
+      - "10051:10051"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - ZS_DBHost=zabbixdb
+      - ZS_DBUser=zabbix
+      - ZS_DBPassword=my_password
+      - XXL_zapix=true
+      - XXL_grapher=true
+```
 
 > 内容来源：杨保华; 戴王剑; 曹亚仑. Docker技术入门与实战（第2版） 
