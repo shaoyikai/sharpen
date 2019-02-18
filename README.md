@@ -68,3 +68,7 @@
 ### 大数据
 
 1. [hadoop](https://www.tutorialspoint.com/hadoop/hadoop_quick_guide.htm)
+
+### 前端知识点
+
+1. [深入浅出浏览器渲染原理](http://web.jobbole.com/95593/)
