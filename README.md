@@ -72,3 +72,4 @@
 ### 前端知识点
 
 1. [深入浅出浏览器渲染原理](http://web.jobbole.com/95593/)
+2. [laravel + vue架构 lazy loading 实现方法](./article/laravel-vue-lazy-loading.md)
