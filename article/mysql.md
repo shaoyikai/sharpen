@@ -21,5 +21,16 @@ mysql_close($link);
 ```
 
 
-----------------------------------------------------
-docker gui
+#### 慢查询日志
+
+```sh
+# 是否开启慢查询
+show variables like 'log_slow_queries';
+# 查看慢查询设置的时间阈值long_query_time
+show variables like '%long%';
+# 查看哪些语句没有使用索引
+show variables like 'log_queries_not_using_indexes';
+
+# 使用mysqldumpslow工具
+mysqldumpslow nh122-190-slow.log
+```
