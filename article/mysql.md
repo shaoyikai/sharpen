@@ -34,3 +34,20 @@ show variables like 'log_queries_not_using_indexes';
 # 使用mysqldumpslow工具
 mysqldumpslow nh122-190-slow.log
 ```
+
+#### 查询mysql占用空间
+
+```sql
+select TABLE_SCHEMA, concat(truncate(sum(data_length)/1024/1024,2),' MB') as data_size,
+concat(truncate(sum(index_length)/1024/1024,2),'MB') as index_size
+from information_schema.tables
+group by TABLE_SCHEMA
+order by data_length desc;
+```
+
+#### 查询mysql数据量大的表
+
+```sql
+SELECT TABLE_NAME,TABLE_ROWS,INDEX_LENGTH,DATA_LENGTH FROM information_schema.TABLES 
+WHERE TABLE_SCHEMA = 'noc' order by TABLE_ROWS desc limit 10;
+```
